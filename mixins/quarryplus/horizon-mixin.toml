@@ -1,0 +1,108 @@
+[mod]
+id = "quarryplus"
+version = "0.1.0"
+priority = 100
+
+[compatibility]
+horizon_revision = "1d63e0a5a37a7a708eb0b32b49bf0dfeb28ed8a9"
+
+# The pure area/order/cost/tick/drop arithmetic (standalone crate lib,
+# injected as `crate::game::quarryplus`).
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "quarryplus"
+source = "runtime.rs"
+
+# Game-side glue: the quarry's block entity, FE buffer, inventory, its tick
+# and `/quarryplus`.
+[[module]]
+id = "state"
+file = "crates/horizon-client/src/game.rs"
+name = "quarryplus_state"
+source = "support.rs"
+
+# The quarry block declares a block entity.
+[[injection]]
+id = "block-entity"
+hook = "block_entity"
+hook_version = 1
+kind = "HEAD"
+helper = "block_entity.rs"
+bindings = [
+  { name = "block", ty = "&str", value = "block" },
+  { name = "entity", ty = "&mut Option<(String, horizon_world::nbt::Compound)>", value = "entity" },
+]
+
+# ... and ticks.
+[[injection]]
+id = "block-entity-ticks"
+hook = "block_entity_ticks"
+hook_version = 1
+kind = "HEAD"
+helper = "ticks.rs"
+bindings = [
+  { name = "block", ty = "&str", value = "block" },
+  { name = "ticks", ty = "&mut bool", value = "ticks" },
+]
+
+# ... with a 10,000 FE buffer kept in the saved compound's `energy` int.
+[[injection]]
+id = "block-entity-energy"
+hook = "block_entity_energy"
+hook_version = 1
+kind = "HEAD"
+helper = "energy.rs"
+bindings = [
+  { name = "block", ty = "&str", value = "block" },
+  { name = "energy", ty = "&mut Option<horizon_client::containers::ModEnergyBuffer>", value = "energy" },
+]
+
+# ... and a nine-slot internal inventory.
+[[injection]]
+id = "block-entity-container"
+hook = "block_entity_container"
+hook_version = 1
+kind = "HEAD"
+helper = "container.rs"
+bindings = [
+  { name = "block", ty = "&str", value = "block" },
+  { name = "container", ty = "&mut Option<horizon_client::containers::ModContainer>", value = "container" },
+]
+
+# Each server tick: advance the dig cursor and break one block.
+[[injection]]
+id = "block-entity-tick"
+hook = "block_entity_tick"
+hook_version = 1
+kind = "HEAD"
+helper = "tick.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "pos", ty = "[i32; 3]", value = "pos" },
+  { name = "entity", ty = "&mut horizon_client::containers::ModBlockEntity", value = "entity" },
+]
+
+# `/quarryplus info|energy|area`: the controls the in-game check uses.
+[[injection]]
+id = "register-commands"
+hook = "register_commands"
+hook_version = 1
+kind = "HEAD"
+helper = "register.rs"
+bindings = [
+  { name = "commands", ty = "&mut Vec<NativeCommand>", value = "commands" },
+]
+
+[[injection]]
+id = "perform-command"
+hook = "perform_command"
+hook_version = 1
+kind = "HEAD"
+helper = "perform.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "player", ty = "&NativeServerPlayer", value = "player" },
+  { name = "command", ty = "&str", value = "command" },
+  { name = "ran", ty = "&mut bool", value = "ran" },
+]

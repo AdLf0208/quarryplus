@@ -1,0 +1,46 @@
+id = "quarryplus"
+kind = "native-mod"
+name = "QuarryPlus"
+summary = "An FE-powered Quarry that mines a bounded 3×3 shaft and collects the drops, ported."
+description = """
+A port of [QuarryPlus](https://github.com/Kotori316/QuarryPlus) by Kotori316 for
+Horizon. This is the first slice, not a full replacement.
+
+Implemented so far
+
+- `quarryplus:quarry` with a 10,000 FE insert-only buffer, backed by the engine's energy capability.
+- A bounded top-down shaft, 3 × 3 × depth (default 8), centred on the quarry, mining one block every four ticks.
+- Upstream's no-enchantment break cost (`25 × hardness` FE: 37 FE for stone), skipping air, fluids, waterlogged and unbreakable blocks.
+- Drops rolled through the engine's machine-breaking helper with a netherite pickaxe and collected into a nine-slot inventory, shown as a vanilla 3 × 3 menu.
+- The carried block/item models, textures, blockstate, recipe, loot table, pickaxe tag and language; `/quarryplus info`, `/quarryplus energy` and `/quarryplus area`.
+
+Not yet ported
+
+- frames and markers (upstream's marker-defined 11 × 11 area and the 9 × 9 interior dug to `minBuildHeight + 1`);
+- the animated mining head and its travel budget;
+- enchantments and upgrade modules (efficiency, unbreaking, fortune, silk touch, pump, bedrock, filter, repeat-tick, experience);
+- fluid handling, XP and chest-minecart collection, the x/z % 3 item-entity sweep, and chunk loading;
+- the advanced quarry, the custom GUI, the creative variants and save-to-item;
+- the `working`/`facing` blockstates (carried but not set) and the craftable recipe (it needs later-slice marker/redstone-block/obsidian items).
+
+Licensed **LGPL-3.0-only**, the original's licence, with the complete corresponding source
+in the port repository, so the licence obligations are met: original copyright
+and licence notices are kept in its LICENSE and LICENSE-NOTICE.md. Help with
+the gaps above is welcome.
+"""
+authors = ["Kotori316", "AdLf0208"]
+owners = ["AdLf0208"]
+owner_ids = [107615167]
+license = "LGPL-3.0-only"
+source = "https://github.com/AdLf0208/quarryplus"
+icon = "icons/quarryplus.png"
+categories = ["technology", "game-mechanics"]
+tags = ["port", "quarry", "mining", "machines"]
+
+[[versions]]
+version = "0.1.0"
+published = "2026-11-09"
+game = "26.3"
+file = "quarryplus-0.1.0.hnmod"
+sha256 = "73531bff79dcd09521aecc47e5ddd806c6b4da7fa5fa8a8ab83c8abf9039eefc"
+changelog = "First release: slice 1 of the port, with the full licence and corresponding source in the port repository"
