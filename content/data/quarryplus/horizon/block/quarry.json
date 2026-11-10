@@ -1,0 +1,23 @@
+{
+  "template": "minecraft:stone",
+  "properties": {
+    "hardness": 1.5,
+    "explosion_resistance": 10.0,
+    "requires_tool": false,
+    "sounds": "minecraft:stone"
+  },
+  "state_properties": {
+    "facing": {
+      "type": "enum",
+      "values": ["down", "up", "north", "south", "east", "west"]
+    },
+    "working": {
+      "type": "boolean"
+    }
+  },
+  "default_state": {
+    "facing": "north",
+    "working": "false"
+  },
+  "item": true
+}

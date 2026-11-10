@@ -1,0 +1,12 @@
+# Port-owned content mod for QuarryPlus 21.1.165 (LGPL-3.0-only,
+# Kotori316/QuarryPlus): the quarry block, its item, recipe, loot, models,
+# textures and lang. The block entity, FE buffer, inventory and tick are the
+# native half in ports/quarryplus/mixins.
+id = "quarryplus"
+name = "QuarryPlus"
+version = "21.1.165"
+description = "Adds machines to make a big hole in your world"
+authors = ["Kotori316"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]

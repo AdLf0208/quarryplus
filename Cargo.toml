@@ -1,0 +1,17 @@
+[package]
+# Ported from: QuarryPlus 21.1.165 (Kotori316/QuarryPlus, LGPL-3.0-only),
+# Minecraft Java 1.21.1 NeoForge. Local-only until the maintainer approves.
+name = "horizon-quarryplus"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "LGPL-3.0-only"
+description = "QuarryPlus for Horizon: an FE-powered quarry that mines a bounded area"
+
+[lib]
+# This exact source is also injected as a same-crate module by horizon-mixins.
+path = "mixins/quarryplus/runtime.rs"
+
+[workspace]
+members = ["tools/audit"]
+resolver = "2"
