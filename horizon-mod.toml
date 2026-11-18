@@ -1,0 +1,23 @@
+id = "quarryplus"
+name = "QuarryPlus"
+version = "0.2.0"
+description = """Adds machines to make a big hole in your world. This slice is the Quarry: a bounded
+3 x 3 shaft dug from the top down, a 10,000 FE buffer that pays 25 FE per point of block hardness, and
+a nine-slot inventory that keeps the drops. The block, its item, recipe, loot, models, textures and
+lang travel inside this package."""
+authors = ["Kotori316", "AdLf0208"]
+# A native mod: Rust in src/, compiled by the launcher against the game build [native] pins,
+# beside data/ and assets/. The id is the resource namespace and the only identity: Cargo's
+# package name and version are not the mod's.
+api = "0.2"
+# "both" is the installation side, not the hook's: an integrated server belongs to the client
+# installation, so a LAN host or a single-player world needs both. A dedicated server is "server".
+side = "both"
+# The one shared value every manifest carries ("May add blocks, items, mob effects and entity
+# types"); the quarry declares a block and its block entity type with it.
+capabilities = ["registries"]
+
+[native]
+game = "26.3"
+horizon = "0b14f8acfd97fa2c750e42795249dcc981178ca4"
+mixins = "e59da9094f0c2fdda6c627fe9eff22dec6a906f0"
