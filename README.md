@@ -1,54 +1,64 @@
-# QuarryPlus — Horizon port (slice 1: the Quarry)
+# QuarryPlus — a Horizon port
 
-A native Horizon port of **QuarryPlus 21.1.165** (`Kotori316/QuarryPlus`,
-**LGPL-3.0-only**): an FE-powered Quarry block that mines a bounded area
-downward and collects the drops into its internal inventory.
+**QuarryPlus** is a Minecraft mod. Advanced mining machines for Minecraft. This repository is a **port of it to [Horizon](https://github.com/horizon-rust/horizon)**, the Rust engine for Minecraft Java 26.3. It carries the complete source of the port plus the content files it ships, and installs as a single `.hmod` package.
 
-**LOCAL-ONLY** until the maintainer approves publishing (ARCHITECTURE.md §8).
-LGPL is licence rank 1: a port may be published under the same licence with
-its complete corresponding source, but approval is still required.
+Upstream: [Kotori316/QuarryPlus](https://github.com/Kotori316/QuarryPlus) — licence **LGPL-3.0-only**.
 
-Provenance, hashes and the upstream commit are in
-`ports/_shared/carry-work/quarryplus/SOURCE.md`; the behaviour reading is in
-`FINDINGS.md`; the ladder and gaps are in `notes.md`.
+| | |
+|---|---|
+| Upstream mod | QuarryPlus ([source](https://github.com/Kotori316/QuarryPlus)) |
+| Ported to | Horizon 0b14f8a, Minecraft Java 26.3, mod API `0.2` |
+| Package | `quarryplus.hmod` (install it with the Horizon launcher) |
+| Licence | **LGPL-3.0-only** — the upstream mod's licence; see [Licence and credit](#licence-and-credit) |
 
-## Layout (flat SDK package, mod API 0.2)
+## What this port implements
+
+- **Reviewer:** LGPL-3.0 source review is the reviewer's limitation
+- **Reviewer:** PR body names the older artifact hash
+- **Reviewer:** licence notice
+- **Reviewer:** registry artifact delivery
+
+## Not yet ported
+
+- **No frames or markers.** The default area is a centred 3 × 3 × 8 box,
+- **No mining animation.** Upstream moves an animated head at 1 FE/block and
+- **No enchantments/upgrades.** The break cost is the no-enchantment
+- **No fluids, bedrock, XP, item-entity sweep or chest minecarts.** Fluids are
+- **The internal inventory is nine slots**, not upstream's unbounded
+- **`facing` stays at its default north.** The arrival hook names the block
+- **No chunk loading**, no advanced quarry, no pump, no save-to-item and no
+- **The carried recipe is not craftable**: it needs `#quarryplus:markers`,
+
+## Installing
+
+1. Install the [Horizon launcher](https://github.com/horizon-rust/horizon/releases) (0.2.70 or newer).
+2. Add `quarryplus.hmod` to the instance's mods.
+3. The package is pinned to a specific Horizon build; the launcher checks that pin.
+
+## Licence and credit
+
+QuarryPlus was created by its upstream authors; the code, models and assets in the original mod
+remain theirs and are used here under **LGPL-3.0-only**. The Rust in this repository is a clean-room
+rewrite for Horizon, not a translation of the original source.
+
+- `LICENSE` — the upstream licence text.
+- `LICENSE-NOTICE.md` — what this port carries and where it came from.
+- The upstream project: https://github.com/Kotori316/QuarryPlus
+
+## Technical details
 
 ```
-horizon-mod.toml                   the only manifest and the only identity
-Cargo.toml                         one crate; horizon-mod-api from .horizon/sdk/
-src/lib.rs                         the one impl mod_api::Hooks + the Quarry Part
-src/runtime.rs                     pure area/order/cost/tick/drop logic + 13 tests
-assets/quarryplus/                 carried models, blockstates, textures, item, lang
-data/quarryplus/                   carried block, recipe, loot, creative tab
-data/minecraft/tags/block/mineable/pickaxe.json
-quarryplus.hmod                    the delivered package (code + content, one file)
-tools/e2e.sh                       the in-game scenario (needs a launcher-built game)
+horizon-mod.toml   package manifest (id, version, api, [native] pin)
+Cargo.toml         the crate; depends on `horizon-mod-api` from the fetched SDK
+src/               lib.rs (the one `impl Hooks`), runtime.rs (pure logic + tests), glue
+assets/ data/      the content the package ships
+tools/             content generators and the e2e scenario
 ```
 
-## Build and verify
+- Build: `cargo horizon-mod build` (packages; it does not compile against the game).
+- Test: `cargo test`, `cargo clippy --all-targets -- -D warnings`.
+- In-game: `ports/tools/launcher-game.sh run quarryplus` in the campaign tree, or install the
+  `.hmod` and play; the harness scenario is `tools/e2e.sh`.
 
-`cargo horizon-mod` fetches the pinned SDK into `.horizon/sdk/` (gitignored, never
-packed); `build` packs, it does not compile against the game.
-
-```sh
-cd ports/quarryplus
-CARGO_INCREMENTAL=0 cargo test                      # 13 runtime + 7 glue tests
-CARGO_INCREMENTAL=0 cargo clippy --all-targets -- -D warnings
-cargo fmt --check                                   # never --all: it would read the SDK
-rm -f Cargo.lock                                    # a packed lock changes the artifact
-CARGO_INCREMENTAL=0 cargo horizon-mod build
-cp target/horizon-mod/quarryplus.hmod ./quarryplus.hmod
-cargo horizon-mod check quarryplus.hmod             # exit 0
-cargo horizon-mod fits quarryplus.hmod --build nightly
-```
-
-`SELFTEST=1 tools/e2e.sh` flips the main assertion and must fail.
-
-## In game
-
-Place `quarryplus:quarry`, feed FE (or `/quarryplus energy <amount> <pos>` op 2),
-and it mines the default 3 × 3 × 8 shaft below it. `/quarryplus info <pos>`
-prints the FE, the mined count and the inventory; `/quarryplus area <pos>
-<radius> <depth>` (op 2) sets the bounded shaft. Frames/markers, the advanced
-quarry, the pump, modules, chunk loading and the custom GUI are later slices.
+This repository is generated from the campaign's port at `ports/quarryplus/`; the port's own
+`notes.md` is the full record (decisions, traps, evidence).
